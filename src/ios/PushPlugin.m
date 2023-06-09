@@ -351,11 +351,14 @@
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
     // [deviceToken description] is like "{length = 32, bytes = 0xd3d997af 967d1f43 b405374a 13394d2f ... 28f10282 14af515f }"
     NSString *token = [self hexadecimalStringFromData:deviceToken];
+    NSLog(@"APNs token decoded: %@", token);
 #else
     // [deviceToken description] is like "<124686a5 556a72ca d808f572 00c323b9 3eff9285 92445590 3225757d b83967be>"
     NSString *token = [[[[deviceToken description] stringByReplacingOccurrencesOfString:@"<"withString:@""]
                         stringByReplacingOccurrencesOfString:@">" withString:@""]
                        stringByReplacingOccurrencesOfString: @" " withString: @""];
+
+    NSLog(@"APNs token decoded(2): %@", token);
 #endif
 
 #if !TARGET_IPHONE_SIMULATOR
@@ -368,6 +371,7 @@
 
         if(![weakSelf usesFCM]) {
             [weakSelf registerWithToken: token];
+            [FIRMessaging messaging].APNSToken = deviceToken;
         }
     }];
 
